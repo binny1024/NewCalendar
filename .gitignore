@@ -1,9 +1,14 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
+/.idea
 /.idea/libraries
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+calendar/.gitignore
+calendar/build.gradle
+calendar/proguard-rules.pro
+calendar/src/
+settings.gradle
