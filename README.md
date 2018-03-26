@@ -28,7 +28,7 @@
          * @param whichMonth 默认显示年份 0 为默认年份 设置指定月份 如 201805
          * @return
          */
-        public DialogCalenderChoose setModelM(int fromYear, int endYear, int whichMonth) {
+        public DialogCalenderChoose setLunarMonth(int fromYear, int endYear, int whichMonth) {
 
         }
 #### 3、创建日期选框
