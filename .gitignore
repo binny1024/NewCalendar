@@ -2,13 +2,8 @@
 .gradle
 /local.properties
 /.idea
-/.idea/libraries
 .DS_Store
 /build
 /captures
 .externalNativeBuild
-calendar/.gitignore
-calendar/build.gradle
-calendar/proguard-rules.pro
-calendar/src/
 settings.gradle

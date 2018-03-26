@@ -1,6 +1,10 @@
 # NewCalendar
 # 自定义 日历
-
+##### 需求：
+###### 1 满足UI效果
+###### 2 选择日期，选中一个日期后，可以向前选择，也可以向后选择
+###### 3 选择同一天，则需要在同一天上点击两下
+###### 4 在任意日期上点击第三下时，取消选择
 
 ![](https://github.com/Xbean1024/NewCalendar/blob/master/gif/qq.gif)
 ### 使用方法：
@@ -21,7 +25,7 @@
          *
          * @param fromYear 开始年份
          * @param endYear  终止年份
-         * @param whichMonth 默认显示年份 0 为默认年份
+         * @param whichMonth 默认显示年份 0 为默认年份 设置指定月份 如 201805
          * @return
          */
         public DialogCalenderChoose setModelM(int fromYear, int endYear, int whichMonth) {

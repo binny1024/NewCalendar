@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="clear_btn" tools:ignore="ResourceName">#E0E0E0</color>
+    <color name="white" tools:ignore="ResourceName">#FFFFFF</color>
+    <color name="item_split_line" tools:ignore="ResourceName">#EBEBEB</color>
+    <color name="lighter_gray" tools:ignore="ResourceName">#F2F2F2</color>
+    <color name="common_color" tools:ignore="ResourceName">#ff8e00</color>
+    <color name="black" tools:ignore="ResourceName">#000000</color>
+</resources>

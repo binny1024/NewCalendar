@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="value_30dp" tools:ignore="ResourceName">30dp</dimen>
+    <dimen name="value_20dp" tools:ignore="ResourceName">20dp</dimen>
+    <dimen name="value_10dp" tools:ignore="ResourceName">10dp</dimen>
+    <dimen name="value_5dp" tools:ignore="ResourceName">5dp</dimen>
+    <dimen name="font_14" tools:ignore="ResourceName">14sp</dimen>
+    <dimen name="font_12" tools:ignore="ResourceName">12sp</dimen>
+</resources>
