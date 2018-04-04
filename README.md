@@ -37,5 +37,5 @@
                          .setLunarMonth(2018, 2018).show();
 ##### 3.2 公历月份（日期是公历的）
      new DialogCalenderChoose(this)
-                        .setLunarMonth(this)
+                        .setOnCalendarResult(this)
                         .setGregorianMonth(2016, 2017).show();
