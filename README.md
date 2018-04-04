@@ -9,7 +9,7 @@
 ![](https://github.com/Xbean1024/NewCalendar/blob/master/gif/qq.gif)
 ### 使用方法：
 #### 1、   gradle dependency
-    compile 'com.binny.lib:calendar:1.1.0'
+    compile 'com.binny.lib:calendar:1.1.1'
 #### 2、实现 OnSelectResultCallback 接口
 
 ##### 2.1、函数说明
