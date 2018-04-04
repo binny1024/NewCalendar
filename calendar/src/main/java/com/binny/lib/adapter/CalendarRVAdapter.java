@@ -68,6 +68,10 @@ public class CalendarRVAdapter extends RecyclerView.Adapter<CalendarRVAdapter.Vi
         return mDateBeanList.size();
     }
 
+    public void release() {
+        mGVViewHolderHelper.release();
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mMonthTitle;
         private GridView mGridViewMonthDays;

@@ -29,9 +29,12 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
     private OnCalendarSelectResultCallback mSelectResultCallback;
     private CalendarSelectResultBean mCalendarSelectResultBean;
     private int mClickedCount;
-    private List<DateBean.Day> mDayListChosenItemTemp = new ArrayList<>();//缓存被选中项，以待清除
     private List<DateBean.Day> mAllDayList = new ArrayList<>();//缓存起始值
-    private DateBean.Day mFirstChosenDay;//缓存起始值
+    /*
+    * 缓存信息
+    * */
+    private List<DateBean.Day> mDayListChosenItemTemp = new ArrayList<>();//缓存被选中项，以待清除
+    private DateBean.Day mFirstChosenDayTemp;//缓存起始值
     private DateBean.Day mStartDay;//缓存起始值
     private DateBean.Day mEndDay;//缓存起始值
     private CalendarRVAdapter mRVAdapter;
@@ -161,7 +164,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
                     mOnFromToDateCallback.hideHeaderHint();
                     mClickedCount++;
                     mChooseTemp = newValue;//缓存第一个被点击的值
-                    mFirstChosenDay = day;
+                    mFirstChosenDayTemp = day;
                     viewHolder.mDay.setBackground(context.getResources().getDrawable(R.drawable.shape_calender_circle));
                     CalendarUtil.changeWidthWrapContent(viewHolder.mDay);
                     day.setChosenStatus(true);
@@ -176,7 +179,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
                         * 向后选择
                         * */
                         Logger.logInfo("mChooseTemp = " + mChooseTemp);
-                        mStartDay = mFirstChosenDay;
+                        mStartDay = mFirstChosenDayTemp;
                         mEndDay = day;
                         updateCalendarHeader();
                         rendererChooseItemStatus(mChooseTemp, newValue);
@@ -185,7 +188,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
                         * 向前选择
                         * */
                         mStartDay = day;
-                        mEndDay = mFirstChosenDay;
+                        mEndDay = mFirstChosenDayTemp;
                         updateCalendarHeader();
                         rendererChooseItemStatus(newValue, mChooseTemp);
                     }else {
@@ -193,7 +196,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
                         * 同一天
                         * */
                         mStartDay = day;
-                        mEndDay = mFirstChosenDay;
+                        mEndDay = mFirstChosenDayTemp;
                         updateCalendarHeader();
                     }
                 }
@@ -246,7 +249,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
         mOnFromToDateCallback.showHeaderHint();
         mClickedCount = 0;
         mChooseTemp = 0;
-        mFirstChosenDay = null;
+        mFirstChosenDayTemp = null;
         int size = mDayListChosenItemTemp.size();
         for (int i = 0; i < size; i++) {
             mDayListChosenItemTemp.get(i).setChosenStatus(false);
@@ -254,6 +257,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
             mDayListChosenItemTemp.get(i).setEndPos(false);
         }
         mDayListChosenItemTemp.clear();
+        mFirstChosenDayTemp = null;
         mRVAdapter.notifyDataSetChanged();
     }
 
@@ -284,5 +288,11 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
     private void updateCalendarHeader(){
         mOnFromToDateCallback.ontoDate(mEndDay.getYear(), mEndDay.getMonth(), mEndDay.getDay(), mEndDay.getWeek());
         mOnFromToDateCallback.onFromDate(mStartDay.getYear(), mStartDay.getMonth(), mStartDay.getDay(), mStartDay.getWeek());
+    }
+
+    public void release() {
+        clearAllChosenStatus();
+        mAllDayList.clear();
+        mAllDayList = null;
     }
 }

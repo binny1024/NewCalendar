@@ -33,6 +33,7 @@
 ##### 3.1 农历月份（日期是公历的）,为例配合这种奇葩需求！
      new DialogCalenderChoose(this)
                          .setOnCalendarResult(this)
+                          .serOrientation(0)//设置方向， 0 水平
                          .setLunarMonth(2018, 2018).show();
 ##### 3.2 公历月份（日期是公历的）
      new DialogCalenderChoose(this)

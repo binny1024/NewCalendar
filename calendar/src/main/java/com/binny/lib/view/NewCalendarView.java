@@ -40,9 +40,7 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
     private android.widget.TextView mChooseMonthto;
     private android.widget.TextView mChooseWeekTo;
     private android.widget.RelativeLayout mSetFromToDateRl;
-    private android.widget.GridView mDateWeekGv;
     private android.support.v7.widget.RecyclerView mCalenderRv;
-    private android.widget.RelativeLayout mChooseDateRl;
     private android.widget.TextView mCalenderClearChosen;
     private android.widget.TextView mCalenderSureBtn;
 
@@ -69,9 +67,9 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
     private void init(Context context) {
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.layout_new_calendar_view, this, true);
-        this.mChooseDateRl = findViewById(R.id.choose_date_rl);
+//        RelativeLayout chooseDateRl = findViewById(R.id.choose_date_rl);
         this.mCalenderRv = findViewById(R.id.calender_rv);
-        this.mDateWeekGv = findViewById(R.id.date_week_gv);
+        android.widget.GridView dateWeekGv = findViewById(R.id.date_week_gv);
 
         this.mSetFromToDateHintTv = findViewById(R.id.set_from_to_date_hint_tv);//选择日期提示文字
         this.mSetFromToDateRl = findViewById(R.id.set_from_to_date_rl);//起止时间框
@@ -115,7 +113,7 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
         /*
         * 设置星期指示器  一 二 三 四 五 六 日
         * */
-        mDateWeekGv.setAdapter(new CommonAdapter<>(context, weekList, R.layout.layout_new_calendar_gv_title_item, new WeekViewHolderHelper()));
+        dateWeekGv.setAdapter(new CommonAdapter<>(context, weekList, R.layout.layout_new_calendar_gv_title_item, new WeekViewHolderHelper()));
         /*
         * 默认竖直方向滚动
         * */
@@ -124,8 +122,9 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
         mCalenderRv.setLayoutManager(mLinearLayoutManager);
     }
 
-    private void initHeader(TextView yf,TextView mf,TextView wf,
-                            TextView yt,TextView mt,TextView wt) {
+    @SuppressLint("SetTextI18n")
+    private void initHeader(TextView yf, TextView mf, TextView wf,
+                            TextView yt, TextView mt, TextView wt) {
         //使用Calendar
         Calendar now = Calendar.getInstance();
         int year = now.get(Calendar.YEAR);
@@ -184,7 +183,7 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
      * 设置日历的滚动方向
      *
      * @param orientation 滚动方向 0 水平方向  1 竖直方向
-     * @return
+     * @return this
      */
     public NewCalendarView setOrientation(int orientation) {
         mLinearLayoutManager = new LinearLayoutManager(mContext, orientation, false);
@@ -218,7 +217,6 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
             @Override
             public void onClick(View v) {
                 if (mCalenderSureBtnClickable) {
-                    Logger.logInfo("mCalenderSureBtnClickable = "+mCalenderSureBtnClickable);
                     mRVAdapter.getGVViewHolderHelper().onSure();
                 }
             }
@@ -230,7 +228,7 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
     public void setMonthBeanDataList(List<DateBean> dateBeanList) {
         //使用Date
         Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
         String date = sdf.format(d);
         int pos = 0;
         int dataNow = Integer.parseInt(date);//201820
@@ -258,7 +256,6 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
             @Override
             public void onClick(View v) {
                 if (mCalenderSureBtnClickable) {
-                    Logger.logInfo("mCalenderSureBtnClickable = "+mCalenderSureBtnClickable);
                     mRVAdapter.getGVViewHolderHelper().onSure();
                 }
             }
@@ -268,31 +265,37 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onFromDate(String year, String month, String day, int week) {
         mChooseYearFrom.setText(year + "年");
         mChooseMonthFrom.setText(month + "月" + day + "日");
+        setWeekDay(week,mChooseWeekFrom);
+
+    }
+
+    private void setWeekDay(int week, TextView weekTv) {
         switch (week) {
             case 0://
-                mChooseWeekFrom.setText("周日");
+                weekTv.setText(" 周日");
                 break;
             case 1://周一
-                mChooseWeekFrom.setText("周一");
+                weekTv.setText(" 周一");
                 break;
             case 2://周二
-                mChooseWeekFrom.setText("周二");
+                weekTv.setText(" 周二");
                 break;
             case 3://周三
-                mChooseWeekFrom.setText("周三");
+                weekTv.setText(" 周三");
                 break;
             case 4://周四
-                mChooseWeekFrom.setText("周四");
+                weekTv.setText(" 周四");
                 break;
             case 5://周五
-                mChooseWeekFrom.setText("周五");
+                weekTv.setText(" 周五");
                 break;
             case 6://周六
-                mChooseWeekFrom.setText("周六");
+                weekTv.setText(" 周六");
                 break;
             default:
                 break;
@@ -300,35 +303,12 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void ontoDate(String year, String month, String day, int week) {
         mChooseYearTo.setText(year + "年");
         mChooseMonthto.setText(month + "月" + day + "日");
-        switch (week) {
-            case 0://
-                mChooseWeekTo.setText("周日");
-                break;
-            case 1://周一
-                mChooseWeekTo.setText("周一");
-                break;
-            case 2://周二
-                mChooseWeekTo.setText("周二");
-                break;
-            case 3://周三
-                mChooseWeekTo.setText("周三");
-                break;
-            case 4://周四
-                mChooseWeekTo.setText("周四");
-                break;
-            case 5://周五
-                mChooseWeekTo.setText("周五");
-                break;
-            case 6://周六
-                mChooseWeekTo.setText("周六");
-                break;
-            default:
-                break;
-        }
+        setWeekDay(week,mChooseWeekTo);
     }
 
     @Override
@@ -365,5 +345,9 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
     public void sureBtnStatusBright() {
         mCalenderSureBtnClickable = true;
         mCalenderSureBtn.setBackground(getResources().getDrawable(R.drawable.shape_calender_sure_btn_bright));
+    }
+
+    public void release() {
+        mRVAdapter.release();
     }
 }

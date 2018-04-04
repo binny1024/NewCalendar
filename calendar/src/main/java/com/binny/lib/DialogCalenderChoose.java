@@ -39,6 +39,7 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
 
     private boolean mConfig;
     OnCalendarSelectResultCallback mOnCalendarSelectResultCallback;
+    private int mOrientation = 1;
 
     public DialogCalenderChoose(@NonNull Context context) {
         super(context, R.style.Theme_Light_NoTitle_Dialog);
@@ -67,16 +68,18 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
             mNewCalendarView.setMonthBeanDataList(mDateBeans);
             return;
         }
-        mNewCalendarView.setMonthBeanDataList(mDateBeans,mWhichMonth);
+        mNewCalendarView.setMonthBeanDataList(mDateBeans, mWhichMonth);
     }
-    public DialogCalenderChoose setOnCalendarResult(OnCalendarSelectResultCallback result){
+
+    public DialogCalenderChoose setOnCalendarResult(OnCalendarSelectResultCallback result) {
         mOnCalendarSelectResultCallback = result;
         return this;
     }
+
     private void initView() {
         mNewCalendarView = findViewById(R.id.new_calender_view_dialog);
         mNewCalendarView.setResultCallback(this);
-
+        mNewCalendarView.setOrientation(mOrientation);
     }
 
     /**
@@ -90,7 +93,7 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
     public DialogCalenderChoose setGregorianMonth(int fromYear, int endYear, int whichMonth) {
         if (fromYear > endYear) {
             mDateBeans.addAll(loadCalendarYM(endYear, fromYear));
-        }else {
+        } else {
             mDateBeans.addAll(loadCalendarYM(fromYear, endYear));
         }
         mWhichMonth = whichMonth;
@@ -108,12 +111,13 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
     public DialogCalenderChoose setLunarMonth(int fromYear, int endYear, int whichMonth) {
         if (fromYear > endYear) {
             mDateBeans.addAll(loadCalendar(endYear, fromYear));
-        }else {
+        } else {
             mDateBeans.addAll(loadCalendar(fromYear, endYear));
         }
         mWhichMonth = whichMonth;
         return this;
     }
+
     /**
      * 2018年08月
      *
@@ -124,7 +128,7 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
     public DialogCalenderChoose setGregorianMonth(int fromYear, int endYear) {
         if (fromYear > endYear) {
             mDateBeans.addAll(loadCalendarYM(endYear, fromYear));
-        }else {
+        } else {
             mDateBeans.addAll(loadCalendarYM(fromYear, endYear));
         }
         mWhichMonth = 0;
@@ -141,7 +145,7 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
     public DialogCalenderChoose setLunarMonth(int fromYear, int endYear) {
         if (fromYear > endYear) {
             mDateBeans.addAll(loadCalendar(endYear, fromYear));
-        }else {
+        } else {
             mDateBeans.addAll(loadCalendar(fromYear, endYear));
         }
         mWhichMonth = 0;
@@ -192,6 +196,12 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
     @Override
     public void onSelectResult(CalendarSelectResultBean calendarSelectResultBean) {
         dismiss();
+        mNewCalendarView.release();
         mOnCalendarSelectResultCallback.onSelectResult(calendarSelectResultBean);
+    }
+
+    public DialogCalenderChoose serOrientation(int i) {
+        mOrientation = i;
+        return this;
     }
 }

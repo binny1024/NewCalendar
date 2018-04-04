@@ -7,7 +7,6 @@ version = "1.1.0"//这个是版本号，必须填写
 android {
     resourcePrefix "calendar"  //资源前缀
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -27,6 +26,7 @@ android {
         }
     }
 
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
