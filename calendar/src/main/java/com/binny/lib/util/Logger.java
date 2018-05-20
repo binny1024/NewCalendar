@@ -10,9 +10,7 @@ import org.json.JSONObject;
 
 import java.util.Map;
 import java.util.Set;
-
 /**
- * author zhaotian
  * package com.jiyong.rtb.util
  * className Logger
  * date on 2018/2/27 13:14

@@ -8,12 +8,20 @@ import java.util.List;
  * date on 2018/3/14 12:46
  * describe 日期实体类
  */
-public class DateBean implements Serializable {
+public class MonthBean implements Serializable {
     private String mMonthTitle;//月
     private String mYear;//年
     private List<Day> mDayList;//一个月的日子
     private String mMonthInt;
+    private int type;
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
     public String getMonthInt() {
         return mMonthInt;
     }
@@ -47,6 +55,9 @@ public class DateBean implements Serializable {
         mDayList = dayList;
     }
 
+    /**
+     * 月份中的  某一天
+     */
     public static class Day implements Serializable {
         private  int mWeek;//周期
         private String mDay;//日
@@ -56,6 +67,7 @@ public class DateBean implements Serializable {
         private int mDayLongValue;//用于比较的值
         private boolean mStartPos;
         private boolean mInitStatus;//为默选中值
+        private String mMonthInt;
 
 
         public String getMonth() {
@@ -111,6 +123,7 @@ public class DateBean implements Serializable {
         }
 
         private boolean mEndPos;
+
         public int getDayLongValue() {
             return mDayLongValue;
         }
@@ -119,19 +132,19 @@ public class DateBean implements Serializable {
             mDayLongValue = longValue;
         }
 
-        public  int getWeek() {
+        public  int getDayInWeek() {
             return mWeek;
         }
 
-        public void setWeek(int week) {
+        public void setDayInWeek(int week) {
             mWeek = week;
         }
 
-        public String getDay() {
+        public String getDayInMonth() {
             return mDay;
         }
 
-        public void setDay(String day) {
+        public void setDayInMonth(String day) {
             mDay = day;
         }
 
@@ -149,6 +162,14 @@ public class DateBean implements Serializable {
 
         public boolean isInitStatus() {
             return mInitStatus;
+        }
+
+        public void setMonthInt(final String monthInt) {
+            mMonthInt = monthInt;
+        }
+
+        public String getMonthInt() {
+            return mMonthInt;
         }
     }
 }

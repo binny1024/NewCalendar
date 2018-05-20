@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:ignore="ResourceName">
     <TextView
+        android:background="@color/item_split_line"
         android:layout_marginBottom="@dimen/value_10dp"
         android:paddingStart="@dimen/value_10dp"
         android:paddingEnd="@dimen/value_10dp"
@@ -17,12 +18,11 @@
         android:textStyle="bold"
         android:text="二月"/>
     <GridView
-        android:layout_weight="1"
+        android:layout_below="@id/calender_rv_item_month_title"
         android:id="@+id/calender_rv_item_gv"
         android:numColumns="7"
         android:verticalSpacing="@dimen/value_10dp"
         android:gravity="center"
-        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-</LinearLayout>
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

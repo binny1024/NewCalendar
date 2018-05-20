@@ -22,8 +22,7 @@ public class MainActivity extends AppCompatActivity implements OnCalendarSelectR
     public void show(View view) {
         new DialogCalenderChoose(this)
                 .setOnCalendarResult(this)
-//                    .serOrientation(0)
-                .setGregorianMonth(2018, 2019, 201906).show();
+                .setGregorianMonth(2015, 2029, 0).show();
     }
 
 

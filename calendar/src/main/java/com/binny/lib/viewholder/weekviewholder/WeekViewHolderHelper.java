@@ -20,7 +20,7 @@ public class WeekViewHolderHelper implements IViewHolderHelper<CalendarGVViewHol
     @Override
     public IViewHolder initItemViewHolder(CalendarGVViewHolder viewHolder, View convertView) {
         viewHolder = new CalendarGVViewHolder();
-        viewHolder.mDay = convertView.findViewById(R.id.calender_gv_item_tv);
+        viewHolder.mDay = convertView.findViewById(R.id.calender_day_tv);
         return viewHolder;
     }
 

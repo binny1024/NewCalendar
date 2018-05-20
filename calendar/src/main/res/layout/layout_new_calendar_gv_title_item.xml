@@ -6,7 +6,7 @@
     android:text="18"
     android:textStyle="bold"
     android:textColor="@color/black"
-    android:id="@+id/calender_gv_item_tv"
+    android:id="@+id/calender_day_tv"
     android:layout_gravity="center"
     android:gravity="center"
     tools:ignore="ResourceName" />

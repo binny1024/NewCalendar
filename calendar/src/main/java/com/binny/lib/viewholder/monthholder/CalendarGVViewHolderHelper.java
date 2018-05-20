@@ -6,11 +6,11 @@ import android.view.View;
 
 import com.binny.lib.adapter.CalendarRVAdapter;
 import com.binny.lib.bean.CalendarSelectResultBean;
+import com.binny.lib.bean.MonthBean;
 import com.binny.lib.callback.OnCancelOrSureBtnClickListener;
 import com.binny.lib.callback.OnFromToDateCallback;
 import com.binny.lib.util.CalendarUtil;
 import com.binny.lib.R;
-import com.binny.lib.bean.DateBean;
 import com.binny.lib.callback.OnCalendarSelectResultCallback;
 import com.binny.lib.util.Logger;
 import com.smart.holder.iinterface.IViewHolder;
@@ -24,30 +24,30 @@ import java.util.List;
  * date on 2018/3/14 14:07
  * describe
  */
-public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVViewHolder, DateBean.Day>, OnCancelOrSureBtnClickListener {
+public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVViewHolder, MonthBean.Day>, OnCancelOrSureBtnClickListener {
 
     private OnCalendarSelectResultCallback mSelectResultCallback;
     private CalendarSelectResultBean mCalendarSelectResultBean;
     private int mClickedCount;
-    private List<DateBean.Day> mAllDayList = new ArrayList<>();//缓存起始值
+    private List<MonthBean.Day> mAllDayList = new ArrayList<>();//缓存起始值
     /*
     * 缓存信息
     * */
-    private List<DateBean.Day> mDayListChosenItemTemp = new ArrayList<>();//缓存被选中项，以待清除
-    private DateBean.Day mFirstChosenDayTemp;//缓存起始值
-    private DateBean.Day mStartDay;//缓存起始值
-    private DateBean.Day mEndDay;//缓存起始值
+    private List<MonthBean.Day> mDayListChosenItemTemp = new ArrayList<>();//缓存被选中项，以待清除
+    private MonthBean.Day mFirstChosenDayTemp;//缓存起始值
+    private MonthBean.Day mStartDay;//缓存起始值
+    private MonthBean.Day mEndDay;//缓存起始值
     private CalendarRVAdapter mRVAdapter;
     private Context mContext;
     private int mChooseTemp;//缓存第一个被选中的数据,也可以作为起始时间
     private OnFromToDateCallback mOnFromToDateCallback;
 
-    public CalendarGVViewHolderHelper(List<DateBean> dateBeanList, OnCalendarSelectResultCallback selectResultCallback, CalendarRVAdapter calendarRVAdapter, OnFromToDateCallback onFromToDateCallback) {
+    public CalendarGVViewHolderHelper(List<MonthBean> monthBeanList, OnCalendarSelectResultCallback selectResultCallback, CalendarRVAdapter calendarRVAdapter, OnFromToDateCallback onFromToDateCallback) {
         mSelectResultCallback = selectResultCallback;
         mOnFromToDateCallback = onFromToDateCallback;
-        int size = dateBeanList.size();
+        int size = monthBeanList.size();
         for (int i = 0; i < size; i++) {
-            List<DateBean.Day> dayList = dateBeanList.get(i).getDayList();
+            List<MonthBean.Day> dayList = monthBeanList.get(i).getDayList();
             int daySize = dayList.size();
             for (int j = 0; j < daySize; j++) {
                 mAllDayList.add(dayList.get(j));
@@ -60,17 +60,18 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
     @Override
     public IViewHolder initItemViewHolder(CalendarGVViewHolder viewHolder, View convertView) {
         viewHolder = new CalendarGVViewHolder();
-        viewHolder.mDay = convertView.findViewById(R.id.calender_gv_item_tv);
+        viewHolder.mDay = convertView.findViewById(R.id.calender_day_tv);
         return viewHolder;
     }
 
 
     @Override
-    public void bindListDataToView(final Context context, final List<DateBean.Day> iBaseBeanList, final CalendarGVViewHolder viewHolder, final int position) {
+    public void bindListDataToView(final Context context, final List<MonthBean.Day> iBaseBeanList, final CalendarGVViewHolder viewHolder, final int position) {
 
         mContext = context;
-        viewHolder.mDay.setText(iBaseBeanList.get(position).getDay());
-        final DateBean.Day day = iBaseBeanList.get(position);
+        String dayText = iBaseBeanList.get(position).getDayInMonth();
+        viewHolder.mDay.setText(dayText);
+        final MonthBean.Day day = iBaseBeanList.get(position);
 
         if (day.isChosenStatus()) {
             viewHolder.mDay.setTextColor(mContext.getResources().getColor(R.color.white));
@@ -78,7 +79,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
             * 如果被选中
             * */
 //            mDayListChosenItemTemp.add(day);
-            int week = day.getWeek();
+            int week = day.getDayInWeek();
             if (mClickedCount==1){
                 CalendarUtil.changeWidthWrapContent(viewHolder.mDay);
                 viewHolder.mDay.setBackground(context.getResources().getDrawable(R.drawable.shape_calender_circle));
@@ -169,7 +170,7 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
                     CalendarUtil.changeWidthWrapContent(viewHolder.mDay);
                     day.setChosenStatus(true);
                     mDayListChosenItemTemp.add(day);
-                    mOnFromToDateCallback.onFromDate(day.getYear(), day.getMonth(), day.getDay(), day.getWeek());
+                    mOnFromToDateCallback.onFromDate(day.getYear(), day.getMonth(), day.getDayInMonth(), day.getDayInWeek());
                 } else {
                     mOnFromToDateCallback.clearBtnStatusBright();
                     mOnFromToDateCallback.sureBtnStatusBright();
@@ -213,10 +214,10 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
     private void rendererChooseItemStatus(int start, int end) {
         int size = mAllDayList.size();
         for (int i = 0; i < size; i++) {
-            DateBean.Day day = mAllDayList.get(i);
+            MonthBean.Day day = mAllDayList.get(i);
             int value = day.getDayLongValue();
-            String date = day.getDay();
-            int week = day.getWeek();
+            String date = day.getDayInMonth();
+            int week = day.getDayInWeek();
             if (value > start - 1 && value < end + 1) {
                  /*
                 * 中间态 全部设置为 选中
@@ -278,16 +279,16 @@ public class CalendarGVViewHolderHelper implements IViewHolderHelper<CalendarGVV
         mCalendarSelectResultBean.setEndDay(mEndDay);
         mCalendarSelectResultBean.setStartDay(mStartDay);
         mSelectResultCallback.onSelectResult(mCalendarSelectResultBean);
-        mOnFromToDateCallback.ontoDate(mEndDay.getYear(), mEndDay.getMonth(), mEndDay.getDay(), mEndDay.getWeek());
-        mOnFromToDateCallback.onFromDate(mStartDay.getYear(), mStartDay.getMonth(), mStartDay.getDay(), mStartDay.getWeek());
+        mOnFromToDateCallback.ontoDate(mEndDay.getYear(), mEndDay.getMonth(), mEndDay.getDayInMonth(), mEndDay.getDayInWeek());
+        mOnFromToDateCallback.onFromDate(mStartDay.getYear(), mStartDay.getMonth(), mStartDay.getDayInMonth(), mStartDay.getDayInWeek());
     }
 
     /**
      * 更新日历头部
      */
     private void updateCalendarHeader(){
-        mOnFromToDateCallback.ontoDate(mEndDay.getYear(), mEndDay.getMonth(), mEndDay.getDay(), mEndDay.getWeek());
-        mOnFromToDateCallback.onFromDate(mStartDay.getYear(), mStartDay.getMonth(), mStartDay.getDay(), mStartDay.getWeek());
+        mOnFromToDateCallback.ontoDate(mEndDay.getYear(), mEndDay.getMonth(), mEndDay.getDayInMonth(), mEndDay.getDayInWeek());
+        mOnFromToDateCallback.onFromDate(mStartDay.getYear(), mStartDay.getMonth(), mStartDay.getDayInMonth(), mStartDay.getDayInWeek());
     }
 
     public void release() {

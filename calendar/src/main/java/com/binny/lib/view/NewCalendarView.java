@@ -2,29 +2,27 @@ package com.binny.lib.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.binny.lib.R;
+import com.binny.lib.adapter.CalendarRVAdapter;
+import com.binny.lib.bean.CalendarDateBean;
 import com.binny.lib.bean.WeekBean;
+import com.binny.lib.callback.OnCalendarSelectResultCallback;
 import com.binny.lib.callback.OnFromToDateCallback;
 import com.binny.lib.util.CalendarUtil;
-import com.binny.lib.util.Logger;
 import com.binny.lib.viewholder.weekviewholder.WeekViewHolderHelper;
-import com.binny.lib.adapter.CalendarRVAdapter;
-import com.binny.lib.bean.DateBean;
-import com.binny.lib.callback.OnCalendarSelectResultCallback;
 import com.smart.holder.CommonAdapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+
+import static com.binny.lib.constant.CalendarConstant.PLACE_HOLDER;
 
 /**
  * author binny
@@ -44,10 +42,9 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
     private android.widget.TextView mCalenderClearChosen;
     private android.widget.TextView mCalenderSureBtn;
 
-    private LinearLayoutManager mLinearLayoutManager;
-    private List<DateBean> mDateBeanList = new ArrayList<>();
+    private GridLayoutManager mGridLayoutManager;
+    private List<CalendarDateBean> mCalendarDateBeanList = new ArrayList<>();
     private Context mContext;
-    private int mOrientation;
     private CalendarRVAdapter mRVAdapter;
     private boolean mCalenderClearChosenClickable;
     private boolean mCalenderSureBtnClickable;
@@ -114,12 +111,18 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
         * 设置星期指示器  一 二 三 四 五 六 日
         * */
         dateWeekGv.setAdapter(new CommonAdapter<>(context, weekList, R.layout.layout_new_calendar_gv_title_item, new WeekViewHolderHelper()));
-        /*
-        * 默认竖直方向滚动
-        * */
-        mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        mLinearLayoutManager.setAutoMeasureEnabled(true);
-        mCalenderRv.setLayoutManager(mLinearLayoutManager);
+        mGridLayoutManager = new GridLayoutManager(context, 7);
+        mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (!PLACE_HOLDER.equals(mCalendarDateBeanList.get(position).getMonthTitle())) {
+                    return 7;
+                }
+                return 1;
+            }
+        });
+        mGridLayoutManager.setAutoMeasureEnabled(true);
+        mCalenderRv.setLayoutManager(mGridLayoutManager);
     }
 
     @SuppressLint("SetTextI18n")
@@ -179,89 +182,43 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
         init(context);
     }
 
-    /**
-     * 设置日历的滚动方向
-     *
-     * @param orientation 滚动方向 0 水平方向  1 竖直方向
-     * @return this
-     */
-    public NewCalendarView setOrientation(int orientation) {
-        mLinearLayoutManager = new LinearLayoutManager(mContext, orientation, false);
-        mCalenderRv.setLayoutManager(mLinearLayoutManager);
-        return this;
-    }
-
-    public void setMonthBeanDataList(List<DateBean> dateBeanList, int date) {
+    public void setMonthBeanDataList(List<CalendarDateBean> monthBeanList, int date) {
         int pos = 0;
-        int size = dateBeanList.size();
+        int size = monthBeanList.size();
         for (int i = 0; i < size; i++) {
-            int m = Integer.parseInt(dateBeanList.get(i).getMonthInt());
+            int m = Integer.parseInt(monthBeanList.get(i).getDay().getMonthInt());
             if (m == date) {
                 pos = i;
-                Logger.logInfo("pos" + pos + "dataNow = " + date + "m = " + m);
                 break;
             }
         }
+        mRVAdapter = new CalendarRVAdapter(mContext, monthBeanList, mResultCallback, this);
 
-        mDateBeanList.addAll(dateBeanList);
-        mRVAdapter = new CalendarRVAdapter(mContext, mDateBeanList, mResultCallback, this);
-        mCalenderClearChosen.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCalenderClearChosenClickable) {
-                    mRVAdapter.getGVViewHolderHelper().onClearAll();
-                }
-            }
-        });
-        mCalenderSureBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCalenderSureBtnClickable) {
-                    mRVAdapter.getGVViewHolderHelper().onSure();
-                }
-            }
-        });
         mCalenderRv.setAdapter(mRVAdapter);
-        CalendarUtil.moveToPosition(mLinearLayoutManager, mCalenderRv, pos);
+        CalendarUtil.moveToPosition(mGridLayoutManager, mCalenderRv, pos);
     }
 
-    public void setMonthBeanDataList(List<DateBean> dateBeanList) {
-        //使用Date
-        Date d = new Date();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-        String date = sdf.format(d);
-        int pos = 0;
-        int dataNow = Integer.parseInt(date);//201820
-        int size = dateBeanList.size();
-        for (int i = 0; i < size; i++) {
-            int m = Integer.parseInt(dateBeanList.get(i).getMonthInt());
-            if (m == dataNow) {
-                pos = i;
-                Logger.logInfo("pos" + pos + "dataNow = " + dataNow + "m = " + m);
-                break;
-            }
-        }
+    public void setMonthBeanDataList(List<CalendarDateBean> monthBeanList) {
+//        //使用Date
+//        Date d = new Date();
+//        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+//        String date = sdf.format(d);
+//        int pos = 0;
+//        int dataNow = Integer.parseInt(date);//201820
+//        int size = monthBeanList.size();
+//        for (int i = 0; i < size; i++) {
+//            int m = Integer.parseInt(monthBeanList.get(i).getDay().getMonthInt());
+//            if (m == dataNow) {
+//                pos = i;
+//                Logger.logInfo("pos" + pos + "dataNow = " + dataNow + "m = " + m);
+//                break;
+//            }
+//        }
 
-        mDateBeanList.addAll(dateBeanList);
-        mRVAdapter = new CalendarRVAdapter(mContext, mDateBeanList, mResultCallback, this);
-        mCalenderClearChosen.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCalenderClearChosenClickable) {
-                    mRVAdapter.getGVViewHolderHelper().onClearAll();
-                }
-            }
-        });
-        mCalenderSureBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCalenderSureBtnClickable) {
-                    mRVAdapter.getGVViewHolderHelper().onSure();
-                }
-            }
-        });
+        mCalendarDateBeanList.addAll(monthBeanList);
+        mRVAdapter = new CalendarRVAdapter(mContext, monthBeanList, mResultCallback, this);
         mCalenderRv.setAdapter(mRVAdapter);
-        CalendarUtil.moveToPosition(mLinearLayoutManager, mCalenderRv, pos);
+//        CalendarUtil.moveToPosition(mGridLayoutManager, mCalenderRv, pos);
     }
 
 

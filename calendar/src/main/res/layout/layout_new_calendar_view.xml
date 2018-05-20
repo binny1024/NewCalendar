@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/choose_date_rl"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     tools:ignore="ResourceName">
     <RelativeLayout
         android:background="@drawable/upper_radius"
@@ -118,6 +118,7 @@
             android:layout_height="wrap_content">
             <include layout="@layout/layout_split_line_item"/>
             <GridView
+                android:minHeight="@null"
                 android:id="@+id/date_week_gv"
                 android:numColumns="7"
                 android:paddingTop="@dimen/value_10dp"
@@ -130,6 +131,7 @@
             android:id="@+id/calender_rv"
             android:layout_width="match_parent"
             android:layout_height="280dp"
+            app:layoutManager="LinearLayoutManager"
             android:layout_below="@id/calendar_title_week_holder_view" />
     </RelativeLayout>
     <LinearLayout

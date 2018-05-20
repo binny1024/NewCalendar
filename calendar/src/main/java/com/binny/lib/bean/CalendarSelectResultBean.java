@@ -7,22 +7,22 @@ package com.binny.lib.bean;
  */
 public class CalendarSelectResultBean {
 
-    private DateBean.Day mEndDay;
-    private DateBean.Day mStartDay;
+    private MonthBean.Day mEndDay;
+    private MonthBean.Day mStartDay;
 
-    public DateBean.Day getEndDay() {
+    public MonthBean.Day getEndDay() {
         return mEndDay;
     }
 
-    public void setEndDay(DateBean.Day endDay) {
+    public void setEndDay(MonthBean.Day endDay) {
         mEndDay = endDay;
     }
 
-    public DateBean.Day getStartDay() {
+    public MonthBean.Day getStartDay() {
         return mStartDay;
     }
 
-    public void setStartDay(DateBean.Day startDay) {
+    public void setStartDay(MonthBean.Day startDay) {
         mStartDay = startDay;
     }
 }

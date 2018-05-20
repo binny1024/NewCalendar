@@ -9,8 +9,8 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.binny.lib.bean.CalendarDateBean;
 import com.binny.lib.bean.CalendarSelectResultBean;
-import com.binny.lib.bean.DateBean;
 import com.binny.lib.callback.OnCalendarSelectResultCallback;
 import com.binny.lib.view.NewCalendarView;
 
@@ -29,15 +29,9 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
     private Activity mContext;
 
     private NewCalendarView mNewCalendarView;//日历视图
-    private List<DateBean> mDateBeans = new ArrayList<>();
-    private Float mScaleHeight = 0.9f;//相对于屏幕的宽度的缩放大小
-    private Float mScaleWidth = 0.9f;
-
-    private Float mOffPosX = null;
-    private Float mOffPosY = null;
+    private List<CalendarDateBean> mMonthBeans = new ArrayList<com.binny.lib.bean.CalendarDateBean>();
     private int mWhichMonth = 0;
 
-    private boolean mConfig;
     OnCalendarSelectResultCallback mOnCalendarSelectResultCallback;
     private int mOrientation = 1;
 
@@ -65,10 +59,10 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
 
     private void bindView() {
         if (mWhichMonth == 0) {
-            mNewCalendarView.setMonthBeanDataList(mDateBeans);
+            mNewCalendarView.setMonthBeanDataList(mMonthBeans);
             return;
         }
-        mNewCalendarView.setMonthBeanDataList(mDateBeans, mWhichMonth);
+        mNewCalendarView.setMonthBeanDataList(mMonthBeans, mWhichMonth);
     }
 
     public DialogCalenderChoose setOnCalendarResult(OnCalendarSelectResultCallback result) {
@@ -79,7 +73,6 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
     private void initView() {
         mNewCalendarView = findViewById(R.id.new_calender_view_dialog);
         mNewCalendarView.setResultCallback(this);
-        mNewCalendarView.setOrientation(mOrientation);
     }
 
     /**
@@ -92,91 +85,11 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
      */
     public DialogCalenderChoose setGregorianMonth(int fromYear, int endYear, int whichMonth) {
         if (fromYear > endYear) {
-            mDateBeans.addAll(loadCalendarYM(endYear, fromYear));
+            mMonthBeans.addAll(loadCalendarYM(endYear, fromYear));
         } else {
-            mDateBeans.addAll(loadCalendarYM(fromYear, endYear));
+            mMonthBeans.addAll(loadCalendarYM(fromYear, endYear));
         }
         mWhichMonth = whichMonth;
-        return this;
-    }
-
-    /**
-     * 八月
-     *
-     * @param fromYear
-     * @param endYear
-     * @param whichMonth
-     * @return
-     */
-    public DialogCalenderChoose setLunarMonth(int fromYear, int endYear, int whichMonth) {
-        if (fromYear > endYear) {
-            mDateBeans.addAll(loadCalendar(endYear, fromYear));
-        } else {
-            mDateBeans.addAll(loadCalendar(fromYear, endYear));
-        }
-        mWhichMonth = whichMonth;
-        return this;
-    }
-
-    /**
-     * 2018年08月
-     *
-     * @param fromYear
-     * @param endYear
-     * @return
-     */
-    public DialogCalenderChoose setGregorianMonth(int fromYear, int endYear) {
-        if (fromYear > endYear) {
-            mDateBeans.addAll(loadCalendarYM(endYear, fromYear));
-        } else {
-            mDateBeans.addAll(loadCalendarYM(fromYear, endYear));
-        }
-        mWhichMonth = 0;
-        return this;
-    }
-
-    /**
-     * 八月
-     *
-     * @param fromYear
-     * @param endYear
-     * @return
-     */
-    public DialogCalenderChoose setLunarMonth(int fromYear, int endYear) {
-        if (fromYear > endYear) {
-            mDateBeans.addAll(loadCalendar(endYear, fromYear));
-        } else {
-            mDateBeans.addAll(loadCalendar(fromYear, endYear));
-        }
-        mWhichMonth = 0;
-        return this;
-    }
-
-    public DialogCalenderChoose configScaleHeight(Float scaleHeight) {
-        this.mScaleHeight = scaleHeight;
-        return this;
-    }
-
-    public DialogCalenderChoose configScaleWidth(Float scaleWidth) {
-        this.mScaleWidth = scaleWidth;
-        return this;
-    }
-
-    public DialogCalenderChoose configOffPosX(Float offPosX) {
-        this.mOffPosX = offPosX;
-        return this;
-    }
-
-    public DialogCalenderChoose configOffPosY(Float offPosY) {
-        this.mOffPosY = offPosY;
-        return this;
-    }
-
-    /**
-     * 初始化界面控件的显示数据
-     */
-    public DialogCalenderChoose applyConfig() {
-        mConfig = true;
         return this;
     }
 
