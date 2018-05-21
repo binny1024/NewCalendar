@@ -1,9 +1,13 @@
 package com.binny.lib.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,8 +16,6 @@ import com.binny.lib.R;
 import com.binny.lib.adapter.CalendarRVAdapter;
 import com.binny.lib.bean.CalendarDateBean;
 import com.binny.lib.bean.WeekBean;
-import com.binny.lib.callback.OnCalendarSelectResultCallback;
-import com.binny.lib.callback.OnFromToDateCallback;
 import com.binny.lib.util.CalendarUtil;
 import com.binny.lib.viewholder.weekviewholder.WeekViewHolderHelper;
 import com.smart.holder.CommonAdapter;
@@ -29,7 +31,7 @@ import static com.binny.lib.constant.CalendarConstant.PLACE_HOLDER;
  * date on 2018/3/14 17:14
  * describe
  */
-public class NewCalendarView extends RelativeLayout implements OnFromToDateCallback {
+public class NewCalendarView extends RelativeLayout implements CalendarRVAdapter.OnItemClickedListener {
     private android.widget.TextView mSetFromToDateHintTv;
     private android.widget.TextView mChooseYearFrom;
     private android.widget.TextView mChooseMonthFrom;
@@ -44,16 +46,14 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
 
     private GridLayoutManager mGridLayoutManager;
     private List<CalendarDateBean> mCalendarDateBeanList = new ArrayList<>();
-    private Context mContext;
+    private Activity mActivity;
     private CalendarRVAdapter mRVAdapter;
     private boolean mCalenderClearChosenClickable;
     private boolean mCalenderSureBtnClickable;
 
-    public void setResultCallback(OnCalendarSelectResultCallback resultCallback) {
-        mResultCallback = resultCallback;
-    }
+    private int mClickedCount;
 
-    private OnCalendarSelectResultCallback mResultCallback;
+
 
     public NewCalendarView(Context context) {
         super(context);
@@ -62,7 +62,6 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
 
     @SuppressLint("SetTextI18n")
     private void init(Context context) {
-        mContext = context;
         LayoutInflater.from(context).inflate(R.layout.layout_new_calendar_view, this, true);
 //        RelativeLayout chooseDateRl = findViewById(R.id.choose_date_rl);
         this.mCalenderRv = findViewById(R.id.calender_rv);
@@ -192,8 +191,8 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
                 break;
             }
         }
-        mRVAdapter = new CalendarRVAdapter(mContext, monthBeanList, mResultCallback, this);
-
+        mRVAdapter = new CalendarRVAdapter(mActivity, monthBeanList);
+        mRVAdapter.setOnItemClickedListener(this);
         mCalenderRv.setAdapter(mRVAdapter);
         CalendarUtil.moveToPosition(mGridLayoutManager, mCalenderRv, pos);
     }
@@ -216,19 +215,10 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
 //        }
 
         mCalendarDateBeanList.addAll(monthBeanList);
-        mRVAdapter = new CalendarRVAdapter(mContext, monthBeanList, mResultCallback, this);
+        mRVAdapter = new CalendarRVAdapter(mActivity, monthBeanList);
+        mRVAdapter.setOnItemClickedListener(this);
         mCalenderRv.setAdapter(mRVAdapter);
 //        CalendarUtil.moveToPosition(mGridLayoutManager, mCalenderRv, pos);
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onFromDate(String year, String month, String day, int week) {
-        mChooseYearFrom.setText(year + "年");
-        mChooseMonthFrom.setText(month + "月" + day + "日");
-        setWeekDay(week,mChooseWeekFrom);
-
     }
 
     private void setWeekDay(int week, TextView weekTv) {
@@ -261,50 +251,35 @@ public class NewCalendarView extends RelativeLayout implements OnFromToDateCallb
     }
 
     @SuppressLint("SetTextI18n")
-    @Override
-    public void ontoDate(String year, String month, String day, int week) {
-        mChooseYearTo.setText(year + "年");
-        mChooseMonthto.setText(month + "月" + day + "日");
-        setWeekDay(week,mChooseWeekTo);
-    }
 
-    @Override
-    public void hideHeaderHint() {
-        this.mSetFromToDateHintTv.setVisibility(GONE);
-        this.mSetFromToDateRl.setVisibility(VISIBLE);
-    }
-
-    @Override
-    public void showHeaderHint() {
-        this.mSetFromToDateHintTv.setVisibility(VISIBLE);
-        this.mSetFromToDateRl.setVisibility(GONE);
-    }
-
-    @Override
-    public void clearBtnStatusGrey() {
-        mCalenderClearChosenClickable = false;
-        mCalenderClearChosen.setBackground(getResources().getDrawable(R.drawable.shape_calender_clear_btn_grey));
-    }
-
-    @Override
-    public void clearBtnStatusBright() {
-        mCalenderClearChosenClickable = true;
-        mCalenderClearChosen.setBackground(getResources().getDrawable(R.drawable.shape_calender_clear_btn_bright));
-    }
-
-    @Override
-    public void sureBtnStatusGrey() {
-        mCalenderSureBtnClickable = false;
-        mCalenderSureBtn.setBackground(getResources().getDrawable(R.drawable.shape_calender_sure_btn_grey));
-    }
-
-    @Override
-    public void sureBtnStatusBright() {
-        mCalenderSureBtnClickable = true;
-        mCalenderSureBtn.setBackground(getResources().getDrawable(R.drawable.shape_calender_sure_btn_bright));
-    }
 
     public void release() {
         mRVAdapter.release();
+    }
+
+    public void setActivity(final Activity activity) {
+        mActivity = activity;
+    }
+
+    @Override
+    public void onItemClickedListener( final TextView textView, final CalendarDateBean.Day day, final int[] clickedCount) {
+        Log.i("[pos, textView, day]", "onItemClickedListener = " + day.getDayLongValue());
+
+        if (TextUtils.isEmpty(textView.getText())) {
+            return;
+        }
+        clickedCount[0]++;
+        setCircle(textView);
+        day.setChosenStatus(true);
+    }
+
+    /**
+     * @param textView 设置此view 的背景色
+     */
+    private void setCircle(final TextView textView) {
+        textView.setTextColor(mActivity.getResources().getColor(R.color.white));
+        textView.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_calender_circle));
+        textView.setGravity(Gravity.CENTER);
+        CalendarUtil.changeWidthWrapContent(textView);
     }
 }

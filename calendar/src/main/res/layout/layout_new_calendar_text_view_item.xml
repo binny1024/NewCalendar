@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="30dp"
-    android:text="18"
-    android:textColor="@color/black"
-    android:id="@+id/calender_day_tv"
-    android:layout_gravity="center"
-    android:gravity="center"
-    tools:ignore="ResourceName" />
+    tools:ignore="ResourceName">
+    <TextView
+        android:id="@+id/calender_day_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="18"
+        android:textColor="@color/black"
+        tools:ignore="ResourceName" />
+</RelativeLayout>

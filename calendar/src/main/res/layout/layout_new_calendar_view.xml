@@ -131,7 +131,6 @@
             android:id="@+id/calender_rv"
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            app:layoutManager="LinearLayoutManager"
             android:layout_below="@id/calendar_title_week_holder_view" />
     </RelativeLayout>
     <LinearLayout

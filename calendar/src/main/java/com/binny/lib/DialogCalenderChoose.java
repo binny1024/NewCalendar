@@ -10,40 +10,30 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.binny.lib.bean.CalendarDateBean;
-import com.binny.lib.bean.CalendarSelectResultBean;
-import com.binny.lib.callback.OnCalendarSelectResultCallback;
 import com.binny.lib.view.NewCalendarView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.binny.lib.util.CalendarUtil.loadCalendarYM;
-import static com.binny.lib.util.CalendarUtil.loadCalendar;
 
 /**
  * author Binny
  * date on 2018/3/14 13:37
  * describe
  */
-public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResultCallback {
-    private Activity mContext;
+public class DialogCalenderChoose extends Dialog  {
 
     private NewCalendarView mNewCalendarView;//日历视图
     private List<CalendarDateBean> mMonthBeans = new ArrayList<com.binny.lib.bean.CalendarDateBean>();
     private int mWhichMonth = 0;
-
-    OnCalendarSelectResultCallback mOnCalendarSelectResultCallback;
-    private int mOrientation = 1;
+    private Activity mActivity;
 
     public DialogCalenderChoose(@NonNull Context context) {
         super(context, R.style.Theme_Light_NoTitle_Dialog);
-        mContext = (Activity) context;
+        mActivity = (Activity) context;
     }
 
-    public DialogCalenderChoose(@NonNull Context context, int themeResId) {
-        super(context, R.style.Theme_Light_NoTitle_Dialog);
-        mContext = (Activity) context;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +55,9 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
         mNewCalendarView.setMonthBeanDataList(mMonthBeans, mWhichMonth);
     }
 
-    public DialogCalenderChoose setOnCalendarResult(OnCalendarSelectResultCallback result) {
-        mOnCalendarSelectResultCallback = result;
-        return this;
-    }
-
     private void initView() {
         mNewCalendarView = findViewById(R.id.new_calender_view_dialog);
-        mNewCalendarView.setResultCallback(this);
+        mNewCalendarView.setActivity(mActivity);
     }
 
     /**
@@ -103,18 +88,6 @@ public class DialogCalenderChoose extends Dialog implements OnCalendarSelectResu
         wl.alpha = 1f;// 设置对话框的透明度,1f不透明
         wl.gravity = Gravity.CENTER;//设置显示在中间
         window.setAttributes(wl);
-        return this;
-    }
-
-    @Override
-    public void onSelectResult(CalendarSelectResultBean calendarSelectResultBean) {
-        dismiss();
-        mNewCalendarView.release();
-        mOnCalendarSelectResultCallback.onSelectResult(calendarSelectResultBean);
-    }
-
-    public DialogCalenderChoose serOrientation(int i) {
-        mOrientation = i;
         return this;
     }
 }
