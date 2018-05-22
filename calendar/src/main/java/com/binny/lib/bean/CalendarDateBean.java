@@ -80,7 +80,7 @@ public class CalendarDateBean implements Serializable {
             return mStartPos;
         }
 
-        public void setStartPos(boolean startPos) {
+        public void setStartSelectedPos(boolean startPos) {
             mStartPos = startPos;
         }
 
@@ -88,7 +88,7 @@ public class CalendarDateBean implements Serializable {
             return mEndPos;
         }
 
-        public void setEndPos(boolean endPos) {
+        public void setEndSelectedPos(boolean endPos) {
             mEndPos = endPos;
         }
 
@@ -122,7 +122,7 @@ public class CalendarDateBean implements Serializable {
             return mChosenStatus;
         }
 
-        public void setChosenStatus(boolean chosenStatus) {
+        public void setSelectedStatus(boolean chosenStatus) {
             mChosenStatus = chosenStatus;
         }
 
@@ -140,6 +140,24 @@ public class CalendarDateBean implements Serializable {
 
         public String getMonthInt() {
             return mMonthInt;
+        }
+
+        @Override
+        public String toString() {
+            return "Day{" +
+                    "mWeek=" + mWeek +
+                    ", mDay='" + mDay + '\'' +
+                    ", mMonthTitle='" + mMonthTitle + '\'' +
+                    ", mYear='" + mYear + '\'' +
+                    ", mChosenStatus=" + mChosenStatus +
+                    ", mDayLongValue=" + mDayLongValue +
+                    ", mStartPos=" + mStartPos +
+                    ", mInitStatus=" + mInitStatus +
+                    ", mMonthInt='" + mMonthInt + '\'' +
+                    ", mIsFirstDay=" + mIsFirstDay +
+                    ", mIsEndDay=" + mIsEndDay +
+                    ", mEndPos=" + mEndPos +
+                    '}';
         }
     }
 }

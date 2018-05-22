@@ -1,9 +1,8 @@
 package com.binny.lib.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +24,13 @@ import static com.binny.lib.constant.CalendarConstant.PLACE_HOLDER;
  * describe
  */
 public class CalendarRVAdapter extends RecyclerView.Adapter<CalendarRVAdapter.ViewHolder> {
-    private Activity mActivity;
+    private Context mContext;
 
     private List<CalendarDateBean> mCalendarDateBeans = new ArrayList<>();//
     private int[] mClickedCount = new int[1];
 
     public interface OnItemClickedListener {
-        void onItemClickedListener(TextView textView, CalendarDateBean.Day day, final int[] clickedCount);
+        void onItemClickedListener(int position, TextView textView, CalendarDateBean.Day day, int[] clickedCount);
     }
 
     private OnItemClickedListener mItemClickedListener;
@@ -40,11 +39,12 @@ public class CalendarRVAdapter extends RecyclerView.Adapter<CalendarRVAdapter.Vi
         mItemClickedListener = itemClickedListener;
     }
 
-    public CalendarRVAdapter(Activity activity, List<CalendarDateBean> dateBeanList) {
-        mActivity = activity;
+    public CalendarRVAdapter(Context context, List<CalendarDateBean> dateBeanList) {
+        mContext = context;
         mCalendarDateBeans.clear();
         mCalendarDateBeans.addAll(dateBeanList);
     }
+
     @Override
     public int getItemViewType(int position) {
         return super.getItemViewType(position);
@@ -53,7 +53,7 @@ public class CalendarRVAdapter extends RecyclerView.Adapter<CalendarRVAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.layout_new_calendar_text_view_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_new_calendar_text_view_item, parent, false);
         viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -62,25 +62,80 @@ public class CalendarRVAdapter extends RecyclerView.Adapter<CalendarRVAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         holder.setIsRecyclable(false);
-        String title =mCalendarDateBeans.get(position).getMonthTitle();
+        String title = mCalendarDateBeans.get(position).getMonthTitle();
         if (!PLACE_HOLDER.equals(title)) {
             holder.mDayTv.setText(title);
-            holder.mDayTv.setPadding(20, 5, 5, 5);
             holder.mDayTv.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
-        }else {
+            CalendarUtil.changeWidthMatchParent(holder.mDayTv);
+        } else {
             final CalendarDateBean.Day day = mCalendarDateBeans.get(position).getDay();
-            if (day.isChosenStatus()) {
-                setCircle(holder.mDayTv);
-                Log.i("[holder, position]", "onBindViewHolder = " + day.getDayLongValue());
-            }
+
             String string = day.getDayInMonth();
-            holder.mDayTv.setText(string);
-            holder.mDayTv.setGravity(Gravity.CENTER);
+
             if (!TextUtils.isEmpty(string)) {
+                holder.mDayTv.setText(string);
+                if (day.isChosenStatus()) {
+                    setCircle(holder.mDayTv);
+                    int week = day.getDayInWeek();
+                    switch (week) {
+                        case 0://周日
+                            if (day.isStartPos() || day.isStartDay()) {
+                                /*
+                                 * 如果周日第一天  设置为圆形背景
+                                 * */
+                                CalendarUtil.changeWidthWrapContent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_circle));
+                            } else {
+                                CalendarUtil.changMatchParent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_right));
+                            }
+                            break;
+                        case 1://周一
+                            if (day.isEndPos() || day.isEndDay()) {
+                                /*
+                                 * 如果周一是中点  设置为圆形背景
+                                 * */
+                                CalendarUtil.changeWidthWrapContent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_circle));
+                            } else {
+                                CalendarUtil.changMatchParent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_left));
+                            }
+                            break;
+                        case 2://周二
+                        case 3://周三
+                        case 4://周四
+                        case 5://周五
+                        case 6://周六
+                            if ((day.isStartPos() && day.isEndDay()) || day.isStartDay() && day.isEndPos()) {
+                                /* 圆形 背景  : 月末始点或者月初终点
+                                 * 28  29 30 31  或  1 设置为圆形
+                                 * */
+                                CalendarUtil.changeWidthWrapContent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_circle));
+                            } else if ((day.isStartDay() || day.isStartPos())) {
+                                /* 左半圆：月初 但不是起始选择点
+                                 *  1
+                                 *  */
+                                CalendarUtil.changMatchParent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_left));
+                            } else if (day.isEndDay() || day.isEndPos()) {
+                                /* 右半圆 ：月末
+                                 * */
+                                CalendarUtil.changMatchParent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_right));
+                            } else {
+                                CalendarUtil.changMatchParent(holder.mDayTv);
+                                holder.mDayTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_rectangle));
+                            }
+                        default:
+                            break;
+                    }
+                }
                 holder.mDayTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
-                        mItemClickedListener.onItemClickedListener(holder.mDayTv, day, mClickedCount);
+                        mItemClickedListener.onItemClickedListener(holder.getAdapterPosition(),holder.mDayTv, day, mClickedCount);
                     }
                 });
             }
@@ -88,26 +143,22 @@ public class CalendarRVAdapter extends RecyclerView.Adapter<CalendarRVAdapter.Vi
         }
     }
 
-    private void setRight(final TextView textView) {
-        textView.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_calender_right));
+    private void setRight(final TextView textView, Context context) {
+        textView.setBackground(context.getResources().getDrawable(R.drawable.shape_calender_right));
     }
 
     /**
      * @param textView 设置此view 的背景色
      */
     private void setCircle(final TextView textView) {
-        textView.setTextColor(mActivity.getResources().getColor(R.color.white));
-        textView.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_calender_circle));
-        textView.setGravity(Gravity.CENTER);
+        textView.setTextColor(mContext.getResources().getColor(R.color.white));
+        textView.setBackground(mContext.getResources().getDrawable(R.drawable.shape_calender_circle));
         CalendarUtil.changeWrapContent(textView);
     }
+
     @Override
     public int getItemCount() {
-        int size = mCalendarDateBeans.size();
-        return size;
-    }
-
-    public void release() {
+        return mCalendarDateBeans.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

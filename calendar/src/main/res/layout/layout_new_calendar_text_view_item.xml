@@ -2,15 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
+    android:layout_height="35dp"
+    android:paddingTop="@dimen/value_2dp"
+    android:paddingBottom="@dimen/value_2dp"
     tools:ignore="ResourceName">
     <TextView
         android:id="@+id/calender_day_tv"
-        android:layout_width="match_parent"
+        android:layout_width="35dp"
         android:layout_height="match_parent"
+        android:singleLine="true"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="18"
         android:textColor="@color/black"
         tools:ignore="ResourceName" />
 </RelativeLayout>

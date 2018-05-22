@@ -2,6 +2,7 @@ package com.binny.lib.util;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,6 +31,9 @@ public final class CalendarUtil {
 //    SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
 //    String c=sdf.format(current);
 //    int date = Integer.parseInt(c);
+
+    public static int mScrollPos;
+    private static int mScrollPosCache;
 
     public static void changeWidthWrapContent(View view) {
         ViewGroup.LayoutParams p = view.getLayoutParams();
@@ -102,8 +106,8 @@ public final class CalendarUtil {
         CalendarDateHelperBean helperBean = new CalendarDateHelperBean();
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, date);//设定日历未具体的某年某月某日
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        int value = Integer.parseInt(dateFormat.format(calendar.getTime()));
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+//        int value = Integer.parseInt(dateFormat.format(calendar.getTime()));
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int placeHolder = 0;
         switch (dayOfWeek) {
@@ -176,6 +180,10 @@ public final class CalendarUtil {
      */
     public static List<CalendarDateBean> loadCalendarYM(int fromYear, int endYear) {
         List<CalendarDateBean> calendarDateBeanList = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Calendar calendar = Calendar.getInstance();
+        int value = Integer.parseInt(dateFormat.format(calendar.getTime()));
+        Log.i("calendar", "loadCalendarYM: CalendarUtil"+value);
         for (int year = fromYear; year <= endYear; year++) {
 
             for (int whichMonth = 0; whichMonth < 12; whichMonth++) {
@@ -191,6 +199,7 @@ public final class CalendarUtil {
                     CalendarDateBean calendarDateBean = new CalendarDateBean();
                     if (whichDay == -1) {
                         calendarDateBean.setMonthTitle(monthTitle);//设置月份
+                        mScrollPosCache = calendarDateBeanList.size();
                         calendarDateBeanList.add(calendarDateBean);
                         continue;
                     }
@@ -214,7 +223,9 @@ public final class CalendarUtil {
                         day.setDayInMonth(CALENDAR_DAY_31[(whichDay - placeHolder)]);// 设置占实际的某一天
                         int longValue = convertValueToInt(year, month, CALENDAR_DAY_31[(whichDay - placeHolder)]);
                         day.setDayLongValue(longValue);
-
+                        if (longValue == value) {
+                            mScrollPos = mScrollPosCache;
+                        }
                         day.setDayInWeek((whichDay + 1) % 7);// day 在一周中 属于哪一天
                         day.setYear(String.valueOf(year));
                         day.setMonth(String.valueOf(month));

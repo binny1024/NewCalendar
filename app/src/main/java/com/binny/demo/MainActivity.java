@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.binny.lib.DialogCalenderChoose;
+import com.binny.lib.bean.CalendarDateBean;
+import com.binny.lib.callback.OnCalendarSelectResultCallback;
+import com.binny.lib.view.DialogCalenderChoose;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnCalendarSelectResultCallback {
     private final String TAG = this.getClass().getSimpleName();
 
     @Override
@@ -18,8 +20,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void show(View view) {
         new DialogCalenderChoose(this)
-                .setGregorianMonth(2015, 2029, 0).show();
+                .setResultCallback(this)
+                .setGregorianMonth(2000, 2018).show();
     }
 
 
+    @Override
+    public void onSelectResult(CalendarDateBean.Day startDay, CalendarDateBean.Day endDay) {
+        Log.i(TAG, "onSelectResult: MainActivity"+startDay.toString());
+    }
 }
