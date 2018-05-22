@@ -102,7 +102,7 @@ public final class CalendarUtil {
      * @param date  指定的 date
      * @return CalendarDateHelperBean 辅助类
      */
-    public static CalendarDateHelperBean getDayHelperBean(int year, int month, int date) {
+    private static CalendarDateHelperBean getDayHelperBean(int year, int month, int date) {
         CalendarDateHelperBean helperBean = new CalendarDateHelperBean();
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, date);//设定日历未具体的某年某月某日
@@ -178,7 +178,7 @@ public final class CalendarUtil {
      * @param endYear  结束年份
      * @return 日历集合
      */
-    public static List<CalendarDateBean> loadCalendarYM(int fromYear, int endYear) {
+    public static List<CalendarDateBean> loadGregorianCalendarMonth(int fromYear, int endYear) {
         List<CalendarDateBean> calendarDateBeanList = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Calendar calendar = Calendar.getInstance();
@@ -190,6 +190,72 @@ public final class CalendarUtil {
                 //2015 年 02月30日
 
                 String monthTitle = year + "年" + GREGORIAN_CALENDAR_MONTH[whichMonth];//2015 年 02月30日
+                int month = whichMonth + 1;
+
+                CalendarDateHelperBean helperBean = CalendarUtil.getDayHelperBean(year, month, 1);
+                int count = helperBean.getTotalNum();//36
+                int placeHolder = helperBean.getPlaceHolderNum();// 5
+                for (int whichDay = -1; whichDay <count; whichDay++) {
+                    CalendarDateBean calendarDateBean = new CalendarDateBean();
+                    if (whichDay == -1) {
+                        calendarDateBean.setMonthTitle(monthTitle);//设置月份
+                        mScrollPosCache = calendarDateBeanList.size();
+                        calendarDateBeanList.add(calendarDateBean);
+                        continue;
+                    }
+                    calendarDateBean.setMonthTitle(PLACE_HOLDER);//设置月份
+                    CalendarDateBean.Day day = new CalendarDateBean.Day();
+                    if (whichDay < placeHolder) {// 0 1 2 3 4
+                        day.setDayInMonth(PLACE_HOLDER);//设置占位为符
+                    } else {
+                        if (whichDay == placeHolder) {// 5
+                            day.setFirstDay(true);//是每月的第一天
+                        }
+                        if (whichDay == count - 1) {
+                            day.setEndDay(true);//每月最后一天
+                        }
+//                        if (whichDay + placeHolder < 10) {
+//                            String m = year + "0" + month;
+//                            day.setMonthInt(m);
+//                        } else {
+//                            day.setMonthInt(String.valueOf(month));
+//                        }
+                        day.setDayInMonth(CALENDAR_DAY_31[(whichDay - placeHolder)]);// 设置占实际的某一天
+                        int longValue = convertValueToInt(year, month, CALENDAR_DAY_31[(whichDay - placeHolder)]);
+                        day.setDayLongValue(longValue);
+                        if (longValue == value) {
+                            mScrollPos = mScrollPosCache;
+                        }
+                        day.setDayInWeek((whichDay + 1) % 7);// day 在一周中 属于哪一天
+                        day.setYear(String.valueOf(year));
+                        day.setMonth(String.valueOf(month));
+                    }
+                    calendarDateBean.setDay(day);
+                    calendarDateBeanList.add(calendarDateBean);
+                }
+            }
+        }
+        return calendarDateBeanList;
+    }
+    /**
+     * 封装年月日信息  2018年05月6日
+     *
+     * @param fromYear 起始月份
+     * @param endYear  结束年份
+     * @return 日历集合
+     */
+    public static List<CalendarDateBean> loadLunarCalendarMonth(int fromYear, int endYear) {
+        List<CalendarDateBean> calendarDateBeanList = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Calendar calendar = Calendar.getInstance();
+        int value = Integer.parseInt(dateFormat.format(calendar.getTime()));
+        Log.i("calendar", "loadCalendarYM: CalendarUtil"+value);
+        for (int year = fromYear; year <= endYear; year++) {
+
+            for (int whichMonth = 0; whichMonth < 12; whichMonth++) {
+                //2015 年 02月30日
+
+                String monthTitle = CHINESE_CALENDAR_MONTH[whichMonth];//2015 年 02月30日
                 int month = whichMonth + 1;
 
                 CalendarDateHelperBean helperBean = CalendarUtil.getDayHelperBean(year, month, 1);

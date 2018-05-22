@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements OnCalendarSelectR
     public void show(View view) {
         new DialogCalenderChoose(this)
                 .setResultCallback(this)
-                .setGregorianMonth(2000, 2018).show();
+                .setLunarMonth(2000, 2018).show();
     }
 
 

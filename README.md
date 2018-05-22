@@ -25,14 +25,25 @@
 ###### 函数说明
 ###### 1设置起止年月
     /**
-     * 2018年08月
-     *
-     * @param fromYear 起始年月
-     * @param endYear 终止年月
-     */
-    public DialogCalenderChoose setGregorianMonth(int fromYear, int endYear) {
+      * 八月
+      *
+      * @param fromYear 起始年月
+      * @param endYear  终止年月
+      */
+     public DialogCalenderChoose setLunarMonth(int fromYear, int endYear) {
 
-    }
+     }
+
+     /**
+      * 2018年08月
+      *
+      * @param fromYear 起始年月
+      * @param endYear  终止年月
+      */
+     public DialogCalenderChoose setGregorianMonth(int fromYear, int endYear) {
+
+     }
+
 ###### 2 回调结果
     /** 回调结果
      * @param resultCallback 回调接口

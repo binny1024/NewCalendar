@@ -65,6 +65,7 @@ public class CalendarRVAdapter extends RecyclerView.Adapter<CalendarRVAdapter.Vi
         String title = mCalendarDateBeans.get(position).getMonthTitle();
         if (!PLACE_HOLDER.equals(title)) {
             holder.mDayTv.setText(title);
+            holder.mDayTv.getPaint().setFakeBoldText(true);
             holder.mDayTv.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
             CalendarUtil.changeWidthMatchParent(holder.mDayTv);
         } else {
