@@ -7,35 +7,72 @@
 ###### 4 在任意日期上点击第三下时，取消选择
 
 ![](https://github.com/Xbean1024/NewCalendar/blob/master/gif/qq.gif)
-### 使用方法：
-#### 1、   gradle dependency
-    compile 'com.binny.lib:calendar:1.1.1'
-#### 2、实现 OnSelectResultCallback 接口
+###### 接口说明
+    import com.binny.lib.bean.CalendarDateBean;
 
-##### 2.1、函数说明
-###### 2.1.1 设置回调结果的接口
+    /**
+     * 作者: binny
+     * 时间: 5/21
+     * 描述: 选择结果的回调接口
+     */
+    public interface OnCalendarSelectResultCallback {
+        /**
+         * @param startDay  起始时间
+         * @param endDay 终止时间
+         */
+        void onSelectResult(CalendarDateBean.Day startDay, CalendarDateBean.Day endDay);
+    }
+###### 函数说明
+###### 1设置起止年月
+    /**
+      * 八月
+      *
+      * @param fromYear 起始年月
+      * @param endYear  终止年月
+      */
+     public DialogCalenderChoose setLunarMonth(int fromYear, int endYear) {
 
-    public DialogCalenderChoose setOnCalendarResult(OnSelectResultCallback result){
+     }
+
+     /**
+      * 2018年08月
+      *
+      * @param fromYear 起始年月
+      * @param endYear  终止年月
+      */
+     public DialogCalenderChoose setGregorianMonth(int fromYear, int endYear) {
+
+     }
+
+###### 2 回调结果
+    /** 回调结果
+     * @param resultCallback 回调接口
+     * @return dialog
+     */
+    public DialogCalenderChoose setResultCallback(OnCalendarSelectResultCallback resultCallback) {
 
     }
-###### 2.1.1 设置起始时间和显示默认位置 "201805"
+###### 使用案例
+    public class MainActivity extends AppCompatActivity implements OnCalendarSelectResultCallback {
+        private final String TAG = this.getClass().getSimpleName();
 
-        /**
-         * @param fromYear 开始年份
-         * @param endYear  终止年份
-         * @param whichMonth 默认显示年份 0 为默认年份 设置指定月份 如 201805
-         * @return
-         */
-        public DialogCalenderChoose setLunarMonth(int fromYear, int endYear, int whichMonth) {
-
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
         }
-#### 3、创建日期选框
-##### 3.1 农历月份（日期是公历的）,为例配合这种奇葩需求！
-     new DialogCalenderChoose(this)
-                         .setOnCalendarResult(this)
-                          .serOrientation(0)//设置方向， 0 水平
-                         .setLunarMonth(2018, 2018).show();
-##### 3.2 公历月份（日期是公历的）
-     new DialogCalenderChoose(this)
-                        .setOnCalendarResult(this)
-                        .setGregorianMonth(2016, 2017).show();
+
+        public void show(View view) {
+            new DialogCalenderChoose(this)
+                    .setResultCallback(this)
+                    .setGregorianMonth(2000, 2018).show();
+        }
+
+
+        @Override
+        public void onSelectResult(CalendarDateBean.Day startDay, CalendarDateBean.Day endDay) {
+            Log.i(TAG, "onSelectResult: MainActivity"+startDay.toString());
+        }
+    }
+
+

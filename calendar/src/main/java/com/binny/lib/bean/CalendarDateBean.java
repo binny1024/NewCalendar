@@ -1,52 +1,33 @@
 package com.binny.lib.bean;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * author Binny
- * date on 2018/3/14 12:46
- * describe 日期实体类
+ * author  binny
+ * date 5/18
  */
-public class DateBean implements Serializable {
-    private String mMonthTitle;//月
-    private String mYear;//年
-    private List<Day> mDayList;//一个月的日子
-    private String mMonthInt;
-
-    public String getMonthInt() {
-        return mMonthInt;
-    }
-
-    public void setMonthInt(String monthInt) {
-        mMonthInt = monthInt;
-    }
-
-    public String getYear() {
-        return mYear;
-    }
-
-    public void setYear(String year) {
-        mYear = year;
-    }
-
+public class CalendarDateBean implements Serializable {
+    private String mMonthTitle;//月份
+    private Day mDay; //某一天
 
     public String getMonthTitle() {
         return mMonthTitle;
     }
 
-    public void setMonthTitle(String monthTitle) {
+    public void setMonthTitle(final String monthTitle) {
         mMonthTitle = monthTitle;
     }
 
-    public List<Day> getDayList() {
-        return mDayList;
+    public Day getDay() {
+        return mDay;
     }
 
-    public void setDayList(List<Day> dayList) {
-        mDayList = dayList;
+    public void setDay(final Day day) {
+        mDay = day;
     }
-
+    /**
+     * 月份中的  某一天
+     */
     public static class Day implements Serializable {
         private  int mWeek;//周期
         private String mDay;//日
@@ -56,6 +37,7 @@ public class DateBean implements Serializable {
         private int mDayLongValue;//用于比较的值
         private boolean mStartPos;
         private boolean mInitStatus;//为默选中值
+        private String mMonthInt;
 
 
         public String getMonth() {
@@ -98,7 +80,7 @@ public class DateBean implements Serializable {
             return mStartPos;
         }
 
-        public void setStartPos(boolean startPos) {
+        public void setStartSelectedPos(boolean startPos) {
             mStartPos = startPos;
         }
 
@@ -106,11 +88,12 @@ public class DateBean implements Serializable {
             return mEndPos;
         }
 
-        public void setEndPos(boolean endPos) {
+        public void setEndSelectedPos(boolean endPos) {
             mEndPos = endPos;
         }
 
         private boolean mEndPos;
+
         public int getDayLongValue() {
             return mDayLongValue;
         }
@@ -119,19 +102,19 @@ public class DateBean implements Serializable {
             mDayLongValue = longValue;
         }
 
-        public  int getWeek() {
+        public  int getDayInWeek() {
             return mWeek;
         }
 
-        public void setWeek(int week) {
+        public void setDayInWeek(int week) {
             mWeek = week;
         }
 
-        public String getDay() {
+        public String getDayInMonth() {
             return mDay;
         }
 
-        public void setDay(String day) {
+        public void setDayInMonth(String day) {
             mDay = day;
         }
 
@@ -139,7 +122,7 @@ public class DateBean implements Serializable {
             return mChosenStatus;
         }
 
-        public void setChosenStatus(boolean chosenStatus) {
+        public void setSelectedStatus(boolean chosenStatus) {
             mChosenStatus = chosenStatus;
         }
 
@@ -149,6 +132,32 @@ public class DateBean implements Serializable {
 
         public boolean isInitStatus() {
             return mInitStatus;
+        }
+
+        public void setMonthInt(final String monthInt) {
+            mMonthInt = monthInt;
+        }
+
+        public String getMonthInt() {
+            return mMonthInt;
+        }
+
+        @Override
+        public String toString() {
+            return "Day{" +
+                    "mWeek=" + mWeek +
+                    ", mDay='" + mDay + '\'' +
+                    ", mMonthTitle='" + mMonthTitle + '\'' +
+                    ", mYear='" + mYear + '\'' +
+                    ", mChosenStatus=" + mChosenStatus +
+                    ", mDayLongValue=" + mDayLongValue +
+                    ", mStartPos=" + mStartPos +
+                    ", mInitStatus=" + mInitStatus +
+                    ", mMonthInt='" + mMonthInt + '\'' +
+                    ", mIsFirstDay=" + mIsFirstDay +
+                    ", mIsEndDay=" + mIsEndDay +
+                    ", mEndPos=" + mEndPos +
+                    '}';
         }
     }
 }

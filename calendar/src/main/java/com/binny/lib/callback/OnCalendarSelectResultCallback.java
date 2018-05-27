@@ -1,12 +1,16 @@
 package com.binny.lib.callback;
 
-import com.binny.lib.bean.CalendarSelectResultBean;
+import com.binny.lib.bean.CalendarDateBean;
 
 /**
- * author binny
- * date on 2018/3/14 18:50
- * describe 选择结果的回调
+ * 作者: binny
+ * 时间: 5/21
+ * 描述: 选择结果的回调接口
  */
 public interface OnCalendarSelectResultCallback {
-    void onSelectResult(CalendarSelectResultBean calendarSelectResultBean);
+    /**
+     * @param startDay  起始时间
+     * @param endDay 终止时间
+     */
+    void onSelectResult(CalendarDateBean.Day startDay, CalendarDateBean.Day endDay);
 }

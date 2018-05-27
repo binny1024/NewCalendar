@@ -5,10 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.binny.lib.DialogCalenderChoose;
-import com.binny.lib.bean.CalendarSelectResultBean;
+import com.binny.lib.bean.CalendarDateBean;
 import com.binny.lib.callback.OnCalendarSelectResultCallback;
-import com.binny.lib.util.Logger;
+import com.binny.lib.view.DialogCalenderChoose;
 
 public class MainActivity extends AppCompatActivity implements OnCalendarSelectResultCallback {
     private final String TAG = this.getClass().getSimpleName();
@@ -21,15 +20,13 @@ public class MainActivity extends AppCompatActivity implements OnCalendarSelectR
 
     public void show(View view) {
         new DialogCalenderChoose(this)
-                .setOnCalendarResult(this)
-//                    .serOrientation(0)
-                .setGregorianMonth(2018, 2019, 201906).show();
+                .setResultCallback(this)
+                .setLunarMonth(2000, 2018).show();
     }
 
 
     @Override
-    public void onSelectResult(CalendarSelectResultBean calendarSelectResultBean) {
-        Log.i(TAG, "onSelectResult: " + calendarSelectResultBean.getStartDay().getDayLongValue() + "  ---  " + calendarSelectResultBean.getEndDay().getDayLongValue());
-
+    public void onSelectResult(CalendarDateBean.Day startDay, CalendarDateBean.Day endDay) {
+        Log.i(TAG, "onSelectResult: MainActivity"+startDay.toString());
     }
 }
