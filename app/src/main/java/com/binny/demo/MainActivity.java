@@ -27,6 +27,6 @@ public class MainActivity extends AppCompatActivity implements OnCalendarSelectR
 
     @Override
     public void onSelectResult(CalendarDateBean.Day startDay, CalendarDateBean.Day endDay) {
-        Log.i(TAG, "onSelectResult: MainActivity"+startDay.toString());
+        Log.i(TAG, "onSelectResult: MainActivity" + startDay.toString() + endDay.toString());
     }
 }

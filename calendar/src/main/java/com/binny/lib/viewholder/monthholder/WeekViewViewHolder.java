@@ -9,6 +9,6 @@ import com.smart.holder.iinterface.IViewHolder;
  * date on 2018/3/14 14:06
  * describe
  */
-public class CalendarGVViewHolder implements IViewHolder {
+public class WeekViewViewHolder implements IViewHolder {
     public TextView mDay;
 }

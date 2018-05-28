@@ -19,7 +19,7 @@ import com.binny.lib.bean.WeekBean;
 import com.binny.lib.callback.OnCalendarSelectResultCallback;
 import com.binny.lib.util.CalendarUtil;
 import com.binny.lib.util.Logger;
-import com.binny.lib.viewholder.weekviewholder.WeekViewHolderHelper;
+import com.binny.lib.viewholder.monthholder.WeekViewHolderHelper;
 import com.smart.holder.CommonAdapter;
 
 import java.util.ArrayList;
@@ -167,9 +167,12 @@ public final class NewCalendarView extends RelativeLayout implements CalendarRVA
                 return 1;
             }
         });
-        mGridLayoutManager.setAutoMeasureEnabled(true);
+        /*
+        * 禁止 rv 自动测量
+        * */
+        mGridLayoutManager.setAutoMeasureEnabled(false);
         mCalenderRv.setLayoutManager(mGridLayoutManager);
-        mCalenderRv.setItemAnimator(new DefaultItemAnimator());
+//        mCalenderRv.setItemAnimator(new DefaultItemAnimator());
     }
 
     @SuppressLint("SetTextI18n")
@@ -227,22 +230,6 @@ public final class NewCalendarView extends RelativeLayout implements CalendarRVA
     public NewCalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
-    }
-
-    public void setMonthBeanDataList(List<CalendarDateBean> monthBeanList, int date) {
-        int pos = 0;
-        int size = monthBeanList.size();
-        for (int i = 0; i < size; i++) {
-            int m = Integer.parseInt(monthBeanList.get(i).getDay().getMonthInt());
-            if (m == date) {
-                pos = i;
-                break;
-            }
-        }
-        mRVAdapter = new CalendarRVAdapter(mContext, monthBeanList);
-        mRVAdapter.setOnItemClickedListener(this);
-        mCalenderRv.setAdapter(mRVAdapter);
-        CalendarUtil.moveToPosition(mGridLayoutManager, mCalenderRv, pos);
     }
 
     void setMonthBeanDataList(List<CalendarDateBean> monthBeanList) {
@@ -320,7 +307,7 @@ public final class NewCalendarView extends RelativeLayout implements CalendarRVA
         mStartDay = day;
         setClearBtnTrue();
         mSetFromToDateRl.setVisibility(VISIBLE);
-        mSetFromToDateHintTv.setVisibility(GONE);
+        mSetFromToDateHintTv.setVisibility(INVISIBLE);
         mSetStartYear.setText(day.getYear() + "年");
         mSetStartMonthDay.setText(day.getMonth() + "月" + day.getDayInMonth() + "日");
         setWeekDay(day.getDayInWeek(), mSetStartWeek);
