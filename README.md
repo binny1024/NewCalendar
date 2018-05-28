@@ -6,6 +6,8 @@
 ###### 3 选择同一天，则需要在同一天上点击两下
 ###### 4 在任意日期上点击第三下时，取消选择
 
+    compile 'com.binny.lib:calendar:1.1.2'
+
 ![](https://github.com/Xbean1024/NewCalendar/blob/master/gif/qq.gif)
 ###### 接口说明
     import com.binny.lib.bean.CalendarDateBean;
